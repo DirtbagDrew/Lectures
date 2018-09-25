@@ -43,7 +43,9 @@ check_constraint(cage(mult, Value, Cells), S):-
         product_list(Cells,X),
         X#=Value.
 check_constraint(cage(div, Value, [Cell1,Cell2]), S):-
-       Value #= Cell1/Cell2;Value #= Cell2/Cell1.
+       X #= div(Cell1,Cell2),
+       Y #= div(Cell2,Cell1),
+       X #= Value; Y #= Value.
 %---------------------------------------------------------------
 kenken(Puzzle):-
         Puzzle=[A,B],
@@ -53,7 +55,7 @@ kenken(Puzzle):-
         Co2=[A2,B2],
         A ins 1..2,
         B ins 1..2,
-        check_constraint(cage(div,1,[A1,B1]),Puzzle),
+        check_constraint(cage(div,2,[A1,B1]),Puzzle),
         %all_different(A),
         %all_different(B),
         %all_different(Co1),
