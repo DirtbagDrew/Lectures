@@ -10,10 +10,15 @@
 % base case: the sum of the empty list is 0
 % []:the list of cells to add
 % Sum:the resulting sum of the list
-sum_list([],0).
-sum_list([Head|Tail],Sum) :-
-        sum_list(Tail, Tsum),
-        Sum #= Head + Tsum.
+get_value([X,Y],S,Z):-
+        nth0(Y,S,Row),
+        nth0(X,Row,Z).
+
+sum_list([],S,0).
+sum_list([Head|Tail],S,Sum) :-
+        sum_list(Tail,S,Tsum),
+        get_value(Head,S,Z),
+        Sum #= Z + Tsum.
 %-------------------------------------------------------------
 % product_list([],product)
 % multiplies all the values of the list together by multiplying
@@ -49,7 +54,7 @@ check_constraint(cage(id, Value, Cells), S):-
         cell_values(Cells,S,Value).
 % method = add:the values of cells will all add up to the Value
 check_constraint(cage(add, Value,Cells), S):-
-        sum_list(Cells,X),
+        sum_list(Cells,S,X),
         X#=Value.
 % method = sub:the values in the cells will subtract to the Value.
 check_constraint(cage(sub, Value, [Cell1,Cell2]), S):-
@@ -84,8 +89,10 @@ kenken(Puzzle):-
         %nth0(1,Puzzle,D),
         %nth0(1,D,E),
         %label(D).
-        cell_values([[1,1]],Puzzle,[2]),
-        check_constraint(cage(id,[2],[[1,1]]),Puzzle),
+        %cell_values([[1,1]],Puzzle,[2]),
+        %check_constraint(cage(add,[4],[[1,1],[0,1]]),Puzzle),
+        sum_list([[1,1],[0,1]],Puzzle,Sum),
+        Sum#=4,
         %all_different(A),
         %all_different(B),
         %all_different(Co1),
