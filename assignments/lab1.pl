@@ -58,7 +58,9 @@ check_constraint(cage(add, Value,Cells), S):-
         X#=Value.
 % method = sub:the values in the cells will subtract to the Value.
 check_constraint(cage(sub, Value, [Cell1,Cell2]), S):-
-        Cell1-Cell2#=Value;Cell2-Cell1#=Value.
+        get_value(Cell1,S,C1),
+        get_value(Cell2,S,C2),
+        C1-C2#=Value;C2-C1#=Value.
 % method = mult:values in the cells will multiply to Value
 check_constraint(cage(mult, Value, Cells), S):-
         product_list(Cells,X),
@@ -90,7 +92,7 @@ kenken(Puzzle):-
         %nth0(1,D,E),
         %label(D).
         %cell_values([[1,1]],Puzzle,[2]),
-        check_constraint(cage(add,4,[[1,1],[0,1]]),Puzzle),
+        check_constraint(cage(sub,0,[[1,1],[0,1]]),Puzzle),
         %sum_list([[1,1],[0,1]],Puzzle,Sum),
         Sum#=4,
         %all_different(A),
