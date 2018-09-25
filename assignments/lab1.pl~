@@ -93,7 +93,7 @@ kenken(Puzzle):-
         %nth0(1,D,E),
         %label(D).
         %cell_values([[1,1]],Puzzle,[2]),
-        check_constraint(cage(mult,4,[[1,1],[0,1]]),Puzzle),
+        check_constraint(cage(mult,1,[[1,1],[0,1]]),Puzzle),
         %sum_list([[1,1],[0,1]],Puzzle,Sum),
         Sum#=4,
         %all_different(A),

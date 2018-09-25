@@ -68,8 +68,10 @@ check_constraint(cage(mult, Value, Cells), S):-
         X#=Value.
 % method = div: values in the cell will divide to Value
 check_constraint(cage(div, Value, [Cell1,Cell2]), S):-
-       X #= div(Cell1,Cell2),
-       Y #= div(Cell2,Cell1),
+       get_value(Cell1,S,C1),
+       get_value(Cell2,S,C2),
+       X #= div(C1,C2),
+       Y #= div(C2,C1),
        X #= Value; Y #= Value.
 %---------------------------------------------------------------
 %check_cages([Cages])
@@ -93,7 +95,7 @@ kenken(Puzzle):-
         %nth0(1,D,E),
         %label(D).
         %cell_values([[1,1]],Puzzle,[2]),
-        check_constraint(cage(mult,1,[[1,1],[0,1]]),Puzzle),
+        check_constraint(cage(div,2,[[1,1],[0,1]]),Puzzle),
         %sum_list([[1,1],[0,1]],Puzzle,Sum),
         Sum#=4,
         %all_different(A),
