@@ -1,0 +1,18 @@
+:- use_module(library(clpfd)).
+
+% Given a Sudoku puzzle as a list of lists, determine if the puzzle has
+% a solution, where _ indicates an unknown square.
+isAdd(X):-
+    X=add.
+isSub(X):-
+    X=sub.
+isMult(X):-
+    X=mult.
+isDiv(X):-
+    X=div.
+isId(X):-
+    X=id.
+cage(add, Num, Coords) :-
+        Num=2,
+        Coords=Coords.
+
