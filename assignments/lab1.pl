@@ -46,7 +46,7 @@ cell_values([[Coordheadx,Coordheady]|Coordtail],S, [Valuehead|Valuetail]):-
 
 % method = id:the cell in the cage will equal the Value
 check_constraint(cage(id, Value, Cells), S):-
-        cell_values(Cells,Value).
+        cell_values(Cells,S,Value).
 % method = add:the values of cells will all add up to the Value
 check_constraint(cage(add, Value,Cells), S):-
         sum_list(Cells,X),
@@ -84,8 +84,8 @@ kenken(Puzzle):-
         %nth0(1,Puzzle,D),
         %nth0(1,D,E),
         %label(D).
-        cell_values([[0,0],[1,1]],Puzzle,[1,2]),
-        %check_constraint(cage(div,2,[A1,B1]),Puzzle).
+        %cell_values([[1,1]],Puzzle,[2]),
+        check_constraint(cage(id,[2],[[1,1]]),Puzzle),
         %all_different(A),
         %all_different(B),
         %all_different(Co1),
