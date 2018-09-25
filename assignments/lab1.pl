@@ -77,32 +77,26 @@ check_constraint(cage(div, Value, [Cell1,Cell2]), S):-
 %check_cages([Cages])
 %uses check constraints to apply rules to all cages
 %Cages: list of all cages in the game
-check_cages([]).
-check_cages([CageHead|CageTail]):-
-        check_cages(CageTail),
-        check_constraint(CageHead).
-
+check_cages([],_).
+check_cages([CageHead|CageTail],S):-
+       check_constraint(CageHead,S),
+       check_cages(CageTail,S).
+row_size([],_).
+row_size([H|T],N):-
+        length(H,N),
+        row_size(T,N).
+col_size(S,N):-
+        length(S,N).
 %---------------------------------------------------------------
-kenken(Puzzle):-
-        Puzzle=[A,B],
-        A=[A1,A2],
-        B=[B1,B2],
-        Co1=[A1,B1],
-        Co2=[A2,B2],
-        A ins 1..2,
-        B ins 1..2,
-        %nth0(1,Puzzle,D),
-        %nth0(1,D,E),
-        %label(D).
-        %cell_values([[1,1]],Puzzle,[2]),
-        check_constraint(cage(div,2,[[1,1],[0,1]]),Puzzle),
-        %sum_list([[1,1],[0,1]],Puzzle,Sum),
-        Sum#=4,
-        %all_different(A),
-        %all_different(B),
-        %all_different(Co1),
-        %all_different(Co2),
-        label(A),
-        label(B).
+kenken(Puzzle,Cages):-
+        col_size(Puzzle,6),
+        row_size(Puzzle,6),
+        append(Puzzle, Values),
+	Values ins 1..6,
+        check_cages(Cages,Puzzle),
+        maplist(all_different, Puzzle),
+        transpose(Puzzle, Cols),
+        maplist(all_different, Cols),
+        maplist(label, Puzzle).
 
-% Puzzle=[[_,_],[_,_]],Puzzle=[A,B],kenken([A,B]).
+%Puzzle=[A,B,C,D,E,F],Cages=[cage(add,11,[[0,0],[0,1]]),cage(div,2,[[1,0],[2,0]]),cage(mult,20,[[3,0],[3,1]]),cage(mult,6,[[4,0],[5,0],[5,1],[5,2]]),cage(sub,3,[[1,1],[2,1]]),cage(div,3,[[4,1],[4,2]]),cage(mult,240,[[0,2],[0,3],[1,2],[1,3]]),cage(mult,6,[[2,2],[3,2]]),cage(mult,30,[[4,3],[5,3]]),cage(mult,6,[[2,3],[2,4]]),cage(add,7,[[3,3],[3,4],[4,4]]),cage(mult,6,[[0,4],[1,4]]),cage(add,8,[[0,5],[1,5],[2,5]]),cage(div,2,[[3,5],[4,5]]),cage(add,9,[[5,4],[5,5]])],kenken(Puzzle,Cages).
