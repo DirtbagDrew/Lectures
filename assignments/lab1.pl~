@@ -28,10 +28,11 @@ sum_list([Head|Tail],S,Sum) :-
 % right now, for our purposes its 1
 % []:the list of cells to multiply against eachother
 % Product: the resulting product of the list
-product_list([],1).
-product_list([Head|Tail],Product) :-
-        product_list(Tail,Tproduct),
-        Product #= Head * Tproduct.
+product_list([],S,1).
+product_list([Head|Tail],S,Product) :-
+        product_list(Tail,S,Tproduct),
+        get_value(Head,S,Z),
+        Product #= Z * Tproduct.
 %--------------------------------------------------------------
 % cell values
 % assigns values to coordinates in a cell.
@@ -63,7 +64,7 @@ check_constraint(cage(sub, Value, [Cell1,Cell2]), S):-
         C1-C2#=Value;C2-C1#=Value.
 % method = mult:values in the cells will multiply to Value
 check_constraint(cage(mult, Value, Cells), S):-
-        product_list(Cells,X),
+        product_list(Cells,S,X),
         X#=Value.
 % method = div: values in the cell will divide to Value
 check_constraint(cage(div, Value, [Cell1,Cell2]), S):-
@@ -92,7 +93,7 @@ kenken(Puzzle):-
         %nth0(1,D,E),
         %label(D).
         %cell_values([[1,1]],Puzzle,[2]),
-        check_constraint(cage(sub,1,[[1,1],[0,1]]),Puzzle),
+        check_constraint(cage(mult,4,[[1,1],[0,1]]),Puzzle),
         %sum_list([[1,1],[0,1]],Puzzle,Sum),
         Sum#=4,
         %all_different(A),
