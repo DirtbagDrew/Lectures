@@ -1,5 +1,8 @@
 :- use_module(library(clpfd)).
 
+% Andrew Myer 012939730
+% CECS 424 Lab 1
+% 9/27/18
 %-------------------------------------------------------------
 % sum_list
 % finds the sum of the list by adding the head of the list and
@@ -22,7 +25,26 @@ product_list([Head|Tail],Product) :-
         Product is Head * Tproduct.
 %--------------------------------------------------------------
 % cell values
+% assigns values to coordinates in a cell.
+% base case: empty lists, do nothing
 cell_values([],[]).
 cell_values([Coordhead|Coordtail], [Valuehead|Valuetail]):-
         Coordhead = Valuehead,
         cell_values(Coordtail,Valuetail).
+%--------------------------------------------------------------
+
+check_constraint(cage(id, Value, Cells), S):-
+        cell_values(Cells,Value).
+check_constraint(cage(add, Value, Cells), S):-
+
+check_constraint(cage(sub, Value, Cells), S).
+check_constraint(cage(mult, Value, Cells), S).
+check_constraint(cage(div, Value, Cells), S).
+%---------------------------------------------------------------
+kenken(Puzzle):-
+        Puzzle=[A,B],
+        A=[A1,A2],
+        B=[B1,B2],
+        check_constraint(cage(id,4,[B2]),Puzzle).
+
+%Puzzle=[[_,_],[_,_]], Puzzle=[A,B],kenken([A,B]).
