@@ -4,17 +4,23 @@
 % CECS 424 Lab 1
 % 9/27/18
 %-------------------------------------------------------------
+% get_value([X,Y]S,Z)
+% gets the value from the puzzle based on the given coordinate
+% X: x coordinate
+% Y: y coordinate
+% S: puzzle to get value from
+% Z: resulting value
+get_value([X,Y],S,Z):-
+        nth0(Y,S,Row),
+        nth0(X,Row,Z).
+%-------------------------------------------------------------
 % sum_list([],Sum)
 % finds the sum of the list by adding the head of the list and
 % then iterating the next value in the list to be the head
 % base case: the sum of the empty list is 0
 % []:the list of cells to add
 % Sum:the resulting sum of the list
-get_value([X,Y],S,Z):-
-        nth0(Y,S,Row),
-        nth0(X,Row,Z).
-
-sum_list([],S,0).
+sum_list([],_,0).
 sum_list([Head|Tail],S,Sum) :-
         sum_list(Tail,S,Tsum),
         get_value(Head,S,Z),
@@ -42,13 +48,12 @@ cell_values([[Coordheadx,Coordheady]|Coordtail],S, [Valuehead|Valuetail]):-
         nth0(Coordheady,S,Y),
         nth0(Coordheadx,Y,Valuehead),
         cell_values(Coordtail,S,Valuetail).
-%--------------------------------------------------------------
-% check constraint(cage(method, Value, Cells), S)
-% checks if the value for the cage is the value of the cell
-% cage: a box of cells that follows a specidied rule
-% method: the method to which the cage will be checked to
-% Value: the number to which the rule should result in
-% Cells: the coordinates that the cage contains
+% -----------------------------------------------------------------------
+% check constraint(cage(method, Value, Cells), S) checks if the value for
+% the cage is the value of the cell cage: a box of cells that follows a
+% specidied rule method: the method to which the cage will be checked to
+% Value: the number to which the rule should result in Cells: the
+% coordinates that the cage contains
 
 % method = id:the cell in the cage will equal the Value
 check_constraint(cage(id, Value, Cells), S):-
@@ -74,13 +79,19 @@ check_constraint(cage(div, Value, [Cell1,Cell2]), S):-
        Y #= div(C2,C1),
        X #= Value; Y #= Value.
 %---------------------------------------------------------------
-%check_cages([Cages])
-%uses check constraints to apply rules to all cages
-%Cages: list of all cages in the game
+% check_cages([Cages],S)
+% uses check constraints to apply rules to all cages
+% Cages: list of all cages in the game
+% S: the puzzle solution
 check_cages([],_).
 check_cages([CageHead|CageTail],S):-
        check_constraint(CageHead,S),
        check_cages(CageTail,S).
+% --------------------------------------------------------------
+% row_size(Rows,N)
+% checks that the rows are N length
+% Rows: the rows in the puzzle
+% N: the desired size
 row_size([],_).
 row_size([H|T],N):-
         length(H,N),
@@ -88,7 +99,11 @@ row_size([H|T],N):-
 col_size(S,N):-
         length(S,N).
 %---------------------------------------------------------------
-kenken(Puzzle,Cages):-
+% solve(Puzzle, Cages)
+% solves the kenken ken puzzle
+% Puzzle: blank puzzle to be solved
+% Cages: cages to help solve the puzzle
+solve(Puzzle,Cages):-
         col_size(Puzzle,6),
         row_size(Puzzle,6),
         append(Puzzle, Values),
@@ -98,84 +113,6 @@ kenken(Puzzle,Cages):-
         transpose(Puzzle, Cols),
         maplist(all_different, Cols),
         maplist(label, Puzzle).
-        /*
-        A=[A1,A2,A3,A4,A5,A6],
-        B=[B1,B2,B3,B4,B5,B6],
-        C=[C1,C2,C3,C4,C5,C6],
-        D=[D1,D2,D3,D4,D5,D6],
-        E=[E1,E2,E3,E4,E5,E6],
-        F=[F1,F2,F3,F4,F5,F6],
-
-        Co1=[A1,B1,C1,D1,E1,F1],
-        Co2=[A2,B2,C2,D2,E2,F2],
-        Co3=[A3,B3,C3,D3,E3,F3],
-        Co4=[A4,B4,C4,D4,E4,F4],
-        Co5=[A5,B5,C5,D5,E5,F5],
-        Co6=[A6,B6,C6,D6,E6,F6],
-
-        A ins 1..6,
-        B ins 1..6,
-        C ins 1..6,
-        D ins 1..6,
-        E ins 1..6,
-        F ins 1..6,
-        %check_constraint(cage(add,11,[[0,0],[0,1]]),Puzzle).
-
-
-
-        check_cages(Cages,Puzzle),
-        all_different(A),
-        all_different(B),
-        all_different(C),
-        all_different(D),
-        all_different(E),
-        all_different(F),
-
-        all_different(Co1),
-        all_different(Co2),
-        all_different(Co3),
-        all_different(Co4),
-        all_different(Co5),
-        all_different(Co6),
-        */
-
-        %nth0(1,Puzzle,D),
-        %nth0(1,D,E),
-        %label(D).
-        %cell_values([[1,1]],Puzzle,[2]),
-                %sum_list([[1,1],[0,1]],Puzzle,Sum),
-        %Sum#=4,
-
-     % ,Puzzle=[[_,_,_,_,_,_],[_,_,_,_,_,_],[_,_,_,_,_,_],[_,_,_,_,_,_],[_,_,_,_,_,_],[_,_,_,_,_,_]],Puzzle=[A,B,C,D,E,F],kenken([A,B,C,D,E,F]).
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
+% --------------------------------------------------------------
+% query to enter:
+% Puzzle=[A,B,C,D,E,F],Cages=[cage(add,11,[[0,0],[0,1]]),cage(div,2,[[1,0],[2,0]]),cage(mult,20,[[3,0],[3,1]]),cage(mult,6,[[4,0],[5,0],[5,1],[5,2]]),cage(sub,3,[[1,1],[2,1]]),cage(div,3,[[4,1],[4,2]]),cage(mult,240,[[0,2],[0,3],[1,2],[1,3]]),cage(mult,6,[[2,2],[3,2]]),cage(mult,30,[[4,3],[5,3]]),cage(mult,6,[[2,3],[2,4]]),cage(add,7,[[3,3],[3,4],[4,4]]),cage(mult,6,[[0,4],[1,4]]),cage(add,8,[[0,5],[1,5],[2,5]]),cage(div,2,[[3,5],[4,5]]),cage(add,9,[[5,4],[5,5]])],solve(Puzzle,Cages).
