@@ -19,6 +19,7 @@ get_value([X,Y],S,Z):-
 % then iterating the next value in the list to be the head
 % base case: the sum of the empty list is 0
 % []:the list of cells to add
+% S: the puzzle
 % Sum:the resulting sum of the list
 sum_list([],_,0).
 sum_list([Head|Tail],S,Sum) :-
@@ -81,6 +82,7 @@ check_constraint(cage(div, Value, [Cell1,Cell2]), S):-
 %---------------------------------------------------------------
 % check_cages([Cages],S)
 % uses check constraints to apply rules to all cages
+% base case: do nothing
 % Cages: list of all cages in the game
 % S: the puzzle solution
 check_cages([],_).
@@ -90,6 +92,7 @@ check_cages([CageHead|CageTail],S):-
 % --------------------------------------------------------------
 % row_size(Rows,N)
 % checks that the rows are N length
+% base case: do nothing
 % Rows: the rows in the puzzle
 % N: the desired size
 row_size([],_).

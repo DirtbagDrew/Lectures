@@ -34,7 +34,7 @@ sum_list([Head|Tail],S,Sum) :-
 % right now, for our purposes its 1
 % []:the list of cells to multiply against eachother
 % Product: the resulting product of the list
-product_list([],S,1).
+product_list([],_,1).
 product_list([Head|Tail],S,Product) :-
         product_list(Tail,S,Tproduct),
         get_value(Head,S,Z),
