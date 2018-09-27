@@ -3,16 +3,15 @@
 % Andrew Myer 012939730
 % CECS 424 Lab 1
 % 9/27/18
-%-------------------------------------------------------------
-% get_value([X,Y]S,Z)
-% gets the value from the puzzle based on the given coordinate
-% X: x coordinate
-% Y: y coordinate
-% S: puzzle to get value from
-% Z: resulting value
-get_value([X,Y],S,Z):-
-        nth0(Y,S,Row),
-        nth0(X,Row,Z).
+%--------------------------------------------------------------
+% cell values
+% assigns values to coordinates in a cell.
+% base case: empty lists, do nothing
+cell_values([],_,[]).
+cell_values([[Coordheadx,Coordheady]|Coordtail],S, [Valuehead|Valuetail]):-
+        nth0(Coordheady,S,Y),
+        nth0(Coordheadx,Y,Valuehead),
+        cell_values(Coordtail,S,Valuetail).
 %-------------------------------------------------------------
 % sum_list([],Sum)
 % finds the sum of the list by adding the head of the list and
@@ -24,7 +23,7 @@ get_value([X,Y],S,Z):-
 sum_list([],_,0).
 sum_list([Head|Tail],S,Sum) :-
         sum_list(Tail,S,Tsum),
-        get_value(Head,S,Z),
+        cell_values([Head],S,[Z]),
         Sum #= Z + Tsum.
 %-------------------------------------------------------------
 % product_list([],product)
@@ -38,17 +37,9 @@ sum_list([Head|Tail],S,Sum) :-
 product_list([],_,1).
 product_list([Head|Tail],S,Product) :-
         product_list(Tail,S,Tproduct),
-        get_value(Head,S,Z),
+        cell_values([Head],S,[Z]),
         Product #= Z * Tproduct.
-%--------------------------------------------------------------
-% cell values
-% assigns values to coordinates in a cell.
-% base case: empty lists, do nothing
-cell_values([],_,[]).
-cell_values([[Coordheadx,Coordheady]|Coordtail],S, [Valuehead|Valuetail]):-
-        nth0(Coordheady,S,Y),
-        nth0(Coordheadx,Y,Valuehead),
-        cell_values(Coordtail,S,Valuetail).
+
 % -----------------------------------------------------------------------
 % check constraint(cage(method, Value, Cells), S) checks if the value for
 % the cage is the value of the cell cage: a box of cells that follows a
@@ -58,15 +49,14 @@ cell_values([[Coordheadx,Coordheady]|Coordtail],S, [Valuehead|Valuetail]):-
 
 % method = id:the cell in the cage will equal the Value
 check_constraint(cage(id, Value, Cells), S):-
-        cell_values(Cells,S,Value).
+        cell_values([Cells],S,[Value]).
 % method = add:the values of cells will all add up to the Value
 check_constraint(cage(add, Value,Cells), S):-
         sum_list(Cells,S,X),
         X#=Value.
 % method = sub:the values in the cells will subtract to the Value.
 check_constraint(cage(sub, Value, [Cell1,Cell2]), S):-
-        get_value(Cell1,S,C1),
-        get_value(Cell2,S,C2),
+        cell_values([Cell1,Cell2],S,[C1,C2]),
         C1-C2#=Value;C2-C1#=Value.
 % method = mult:values in the cells will multiply to Value
 check_constraint(cage(mult, Value, Cells), S):-
@@ -74,8 +64,7 @@ check_constraint(cage(mult, Value, Cells), S):-
         X#=Value.
 % method = div: values in the cell will divide to Value
 check_constraint(cage(div, Value, [Cell1,Cell2]), S):-
-       get_value(Cell1,S,C1),
-       get_value(Cell2,S,C2),
+       cell_values([Cell1,Cell2],S,[C1,C2]),
        X #= div(C1,C2),
        Y #= div(C2,C1),
        X #= Value; Y #= Value.
